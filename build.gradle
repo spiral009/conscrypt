@@ -37,6 +37,26 @@ subprojects {
         apply plugin: 'java-library'
         apply plugin: 'cpp'
 
+
+
+
+plugins.withType(CppPlugin) {
+    model {
+        components {
+            all {
+                binaries.all {
+                    if (toolChain in Clang || toolChain in Gcc) {
+                        cppCompiler.args "-Wno-error"
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
         model {
             toolChains {
                 visualCpp(VisualCpp)

@@ -524,18 +524,40 @@ model {
 }
 
 boolean isExecutableOnPath(executable) {
+    println "Checking for executable: ${executable}"
+    if (executable == null || executable.trim().isEmpty()) {
+        println "Error: Executable name is null or empty"
+        return false
+    }
     FilenameFilter filter = new FilenameFilter() {
         @Override
         boolean accept(File dir, String name) {
             return executable.equals(name);
         }
     }
-    for(String folder : System.getenv('PATH').split("" + File.pathSeparatorChar)) {
-        File[] files = file(folder).listFiles(filter)
-        if (files != null && files.size() > 0) {
-            return true;
+    String path = System.getenv('PATH')
+    if (path == null || path.trim().isEmpty()) {
+        println "Error: PATH environment variable is null or empty"
+        return false
+    }
+    println "PATH: ${path}"
+    for (String folder : path.split(File.pathSeparator)) {
+        if (folder == null || folder.trim().isEmpty()) {
+            println "Warning: Empty folder in PATH, skipping"
+            continue
+        }
+        println "Checking directory: ${folder}"
+        File dir = new File(folder)
+        if (!dir.exists() || !dir.isDirectory()) {
+            println "Warning: ${folder} does not exist or is not a directory, skipping"
+            continue
+        }
+        File[] files = dir.listFiles(filter)
+        if (files != null && files.length > 0) {
+            println "Found executable: ${files[0]}"
+            return true
         }
     }
-    return false;
+    println "Executable not found: ${executable}"
+    return false
 }
-

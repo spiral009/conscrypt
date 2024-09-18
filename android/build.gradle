@@ -64,7 +64,11 @@ if (androidSdkInstalled) {
                             '-DBORINGSSL_IMPLEMENTATION',
                             '-DOPENSSL_SMALL',
                             '-D_XOPEN_SOURCE=700',
-                            '-Wno-unused-parameter'
+                            '-Wno-unused-parameter',
+                            '-Wno-error', 
+                            '-Wno-unused-result', 
+                            '-Wno-write-strings'
+                    cppFlags '-Wno-error'
                     targets 'conscrypt_jni'
                     version androidCmakeVersion
                 }
